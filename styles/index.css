@@ -1,0 +1,23 @@
+/* purgecss start ignore */
+@tailwind base;
+@tailwind components;
+/* purgecss end ignore */
+
+@tailwind utilities;
+
+.square {
+  @apply relative h-full w-full  border-solid border-2 border-gray-600;
+  padding-top: 100%;
+}
+
+.square > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.container {
+  @apply max-w-2xl mx-auto my-0;
+}
