@@ -1,4 +1,4 @@
-import { createMachine } from 'xstate'
+import { Machine } from 'xstate'
 
 import { Piece } from '../typing'
 
@@ -8,7 +8,11 @@ export interface SquareContext {
   piece?: Piece
 }
 
-export type SquareEvent = { type: 'SELECT' } | { type: 'UNSELECT' }
+export type SquareEvent =
+  | {
+      type: 'SELECT'
+    }
+  | { type: 'UNSELECT' }
 
 export type SquareState =
   | {
@@ -20,15 +24,15 @@ export type SquareState =
       context: SquareContext
     }
 
-export const squareMachine = createMachine<
-  SquareContext,
-  SquareEvent,
-  SquareState
->({
+export const squareMachine = Machine<SquareContext, any, SquareEvent>({
   id: 'square',
   initial: 'idle',
   states: {
-    idle: {},
-    selected: {},
+    idle: {
+      on: { SELECT: 'selected' },
+    },
+    selected: {
+      on: { UNSELECT: 'idle' },
+    },
   },
 })
