@@ -15,7 +15,17 @@ const Square = ({ squareRef, handleClick }: SquareProps) => {
   const { x, y, piece } = state.context
 
   return (
-    <div className="square" onClick={() => handleClick(squareRef)}>
+    <div
+      className={
+        'square ' +
+        (state.value === 'highlighted'
+          ? piece
+            ? 'highlighted-enemy'
+            : 'highlighted'
+          : '')
+      }
+      onClick={() => handleClick(squareRef)}
+    >
       <div>
         <div>
           ({x}, {y})
