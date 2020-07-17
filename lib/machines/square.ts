@@ -1,4 +1,4 @@
-import { Machine } from 'xstate'
+import { assign, Machine } from 'xstate'
 
 import { Color, Piece } from '../typing'
 
@@ -10,10 +10,10 @@ export interface SquareContext {
 }
 
 export type SquareEvent =
-  | {
-      type: 'SELECT'
-    }
+  | { type: 'SELECT' }
   | { type: 'UNSELECT' }
+  | { type: 'HIGHLIGHT' }
+  | { type: 'UPDATE'; values: { piece: Piece; color: Color } }
 
 export type SquareState =
   | {
@@ -33,11 +33,19 @@ export const squareMachine = Machine<SquareContext, any, SquareEvent>({
   id: 'square',
   initial: 'idle',
   states: {
-    idle: {
-      on: { SELECT: 'selected' },
-    },
-    selected: {
-      on: { UNSELECT: 'idle' },
+    idle: {},
+    selected: {},
+    highlighted: {},
+  },
+  on: {
+    SELECT: 'selected',
+    UNSELECT: 'idle',
+    HIGHLIGHT: 'highlighted',
+    UPDATE: {
+      actions: assign({
+        piece: (_, event) => event.values.piece,
+        color: (_, event) => event.values.color,
+      }),
     },
   },
 })
