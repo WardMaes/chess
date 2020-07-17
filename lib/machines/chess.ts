@@ -1,14 +1,12 @@
 import { assign, interpret, Interpreter, Machine, spawn } from 'xstate'
 
 import { defaultSquareConfig } from '../config'
+import { Color, Piece } from '../typing'
 
 import { squareMachine, SquareContext, SquareEvent } from './square'
 
 export interface ChessContext {
-  // TODO: use SquareContext instead of x and y
   squares: {
-    x: number
-    y: number
     ref: Interpreter<SquareContext, any, SquareEvent, any>
   }[]
 }
@@ -41,7 +39,6 @@ export const chessMachine = Machine<ChessContext, any, ChessEvent>(
         entry: assign({
           squares: () => {
             return defaultSquareConfig().map(square => ({
-              ...square,
               ref: spawn(squareMachine.withContext(square)),
             }))
           },

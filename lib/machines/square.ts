@@ -1,11 +1,12 @@
 import { Machine } from 'xstate'
 
-import { Piece } from '../typing'
+import { Color, Piece } from '../typing'
 
 export interface SquareContext {
   x: number
   y: number
   piece?: Piece
+  color?: Color
 }
 
 export type SquareEvent =
@@ -21,6 +22,10 @@ export type SquareState =
     }
   | {
       value: 'selected'
+      context: SquareContext
+    }
+  | {
+      value: 'highlighted'
       context: SquareContext
     }
 
