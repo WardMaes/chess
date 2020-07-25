@@ -115,7 +115,12 @@ const getMoves = (
   switch (context.piece) {
     case Piece.pawn:
       return squares
-        .filter(s => oneStepMove(s, context) || twoStepMove(s, context))
+        .filter(
+          s =>
+            oneStepMove(s, context) ||
+            twoStepMove(s, context) ||
+            captureDiagonally(s, context)
+        )
         .map(s => s.ref)
     case Piece.bishop:
     case Piece.king:
@@ -137,3 +142,12 @@ const twoStepMove = (s: SquareType, context: SquareContext): boolean =>
   (!s.ref.state.context.piece &&
     s.ref.state.context.x === context.x &&
     s.ref.state.context.y === (context.color === Color.black ? 3 : 4))
+
+const captureDiagonally = (s: SquareType, context: SquareContext): boolean =>
+  !!(
+    s.ref.state.context.piece &&
+    (s.ref.state.context.x === context.x + 1 ||
+      s.ref.state.context.x === context.x - 1) &&
+    s.ref.state.context.y ===
+      context.y + (context.color === Color.black ? 1 : -1)
+  )
