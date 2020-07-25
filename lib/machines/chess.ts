@@ -1,19 +1,21 @@
-import { assign, interpret, Interpreter, Machine, send, spawn } from 'xstate'
+import { assign, interpret, Interpreter, Machine, spawn } from 'xstate'
 
 import { defaultSquareConfig } from '../config'
 import { Color, Piece } from '../typing'
 
 import { squareMachine, SquareContext, SquareEvent } from './square'
 
+export type SquareRefType = Interpreter<SquareContext, any, SquareEvent, any>
+
 export interface ChessContext {
   squares: {
-    ref: Interpreter<SquareContext, any, SquareEvent, any>
+    ref: SquareRefType
   }[]
 }
 
 export type ChessEvent = {
   type: 'CLICK_SQUARE'
-  squareRef: Interpreter<SquareContext, any, SquareEvent, any>
+  squareRef: SquareRefType
 }
 
 export type ChessState =
@@ -102,10 +104,10 @@ chessService.subscribe(state => {
 
 const getMoves = (
   squares: any[], // TODO: find correct type
-  squareRef: Interpreter<SquareContext, any, SquareEvent, any>
-): Interpreter<SquareContext, any, SquareEvent, any>[] => {
+  squareRef: SquareRefType
+): SquareRefType[] => {
   console.log(squareRef.state)
-  const moves: Interpreter<SquareContext, any, SquareEvent, any>[] = []
+  const moves: SquareRefType[] = []
 
   const { context } = squareRef.state
 

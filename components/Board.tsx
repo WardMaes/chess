@@ -1,17 +1,14 @@
-import { Interpreter } from 'xstate'
 import { useContext } from 'react'
 
 import { chessContext } from '../lib/context'
-import { SquareContext, SquareEvent } from '../lib/machines/square'
+import { SquareRefType } from '../lib/machines/chess'
 
 import Square from './Square'
 
 const Board = () => {
   const [state, send] = useContext(chessContext)
 
-  function handleSquareClick(
-    square: Interpreter<SquareContext, any, SquareEvent, any>
-  ) {
+  function handleSquareClick(square: SquareRefType) {
     send({ type: 'CLICK_SQUARE', squareRef: square })
   }
 

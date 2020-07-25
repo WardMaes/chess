@@ -1,13 +1,10 @@
-import { Interpreter } from 'xstate'
 import { useService } from '@xstate/react'
 
-import { SquareContext, SquareEvent } from '../lib/machines/square'
+import { SquareRefType } from '../lib/machines/chess'
 
 type SquareProps = {
-  squareRef: Interpreter<SquareContext, any, SquareEvent, any>
-  handleClick: (
-    squareRef: Interpreter<SquareContext, any, SquareEvent, any>
-  ) => void
+  squareRef: SquareRefType
+  handleClick: (squareRef: SquareRefType) => void
 }
 
 const Square = ({ squareRef, handleClick }: SquareProps) => {
