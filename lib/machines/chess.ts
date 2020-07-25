@@ -7,6 +7,8 @@ import { squareMachine, SquareContext, SquareEvent } from './square'
 
 export type SquareRefType = Interpreter<SquareContext, any, SquareEvent, any>
 
+export type SquareType = { ref: SquareRefType }
+
 export interface ChessContext {
   squares: {
     ref: SquareRefType
@@ -103,38 +105,67 @@ chessService.subscribe(state => {
 })
 
 const getMoves = (
-  squares: any[], // TODO: find correct type
+  squares: SquareType[],
   squareRef: SquareRefType
 ): SquareRefType[] => {
   console.log(squareRef.state)
-  const moves: SquareRefType[] = []
 
   const { context } = squareRef.state
 
   switch (context.piece) {
     case Piece.pawn:
-      if (context.color === Color.black) {
-        const move = squares.find(
-          s =>
-            s.ref.state.context.x === context.x &&
-            s.ref.state.context.y === context.y + 1
-        )
-        if (move) {
-          moves.push(move.ref)
-        }
-      } else {
-        const move = squares.find(
-          s =>
-            s.ref.state.context.x === context.x &&
-            s.ref.state.context.y === context.y - 1
-        )
-        if (move) {
-          moves.push(move.ref)
-        }
-      }
-      break
+      return getPawnMoves(squareRef, squares)
+    case Piece.bishop:
+    case Piece.king:
+    case Piece.queen:
+    case Piece.rook:
+    case Piece.knight:
     default:
-      break
+      return []
+  }
+}
+
+const getPawnMoves = (
+  ref: SquareRefType,
+  squares: SquareType[]
+): SquareRefType[] => {
+  const { context } = ref.state
+  const moves: SquareRefType[] = []
+
+  if (context.color === Color.black) {
+    const move = squares.find(
+      s =>
+        s.ref.state.context.x === context.x &&
+        s.ref.state.context.y === context.y + 1
+    )
+    if (move) {
+      moves.push(move.ref)
+    }
+    if (context.y === 1) {
+      const twoStepMove = squares.find(
+        s => s.ref.state.context.x === context.x && s.ref.state.context.y === 3
+      )
+      if (twoStepMove) {
+        moves.push(twoStepMove.ref)
+      }
+    }
+  } else {
+    const move = squares.find(
+      s =>
+        s.ref.state.context.x === context.x &&
+        s.ref.state.context.y === context.y - 1
+    )
+    if (move) {
+      moves.push(move.ref)
+    }
+    if (context.y === 6) {
+      const twoStepMove = squares.find(
+        s => s.ref.state.context.x === context.x && s.ref.state.context.y === 4
+      )
+      if (twoStepMove) {
+        moves.push(twoStepMove.ref)
+      }
+    }
   }
 
   return moves
