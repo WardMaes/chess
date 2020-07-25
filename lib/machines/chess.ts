@@ -114,7 +114,9 @@ const getMoves = (
 
   switch (context.piece) {
     case Piece.pawn:
-      return getPawnMoves(squareRef, squares)
+      return squares
+        .filter(s => oneStepMove(s, context) || twoStepMove(s, context))
+        .map(s => s.ref)
     case Piece.bishop:
     case Piece.king:
     case Piece.queen:
@@ -125,48 +127,13 @@ const getMoves = (
   }
 }
 
-const getPawnMoves = (
-  ref: SquareRefType,
-  squares: SquareType[]
-): SquareRefType[] => {
-  const { context } = ref.state
-  const moves: SquareRefType[] = []
+const oneStepMove = (s: SquareType, context: SquareContext): boolean =>
+  !s.ref.state.context.piece &&
+  s.ref.state.context.x === context.x &&
+  s.ref.state.context.y === context.y + (context.color === Color.black ? 1 : -1)
 
-  if (context.color === Color.black) {
-    const move = squares.find(
-      s =>
-        s.ref.state.context.x === context.x &&
-        s.ref.state.context.y === context.y + 1
-    )
-    if (move) {
-      moves.push(move.ref)
-    }
-    if (context.y === 1) {
-      const twoStepMove = squares.find(
-        s => s.ref.state.context.x === context.x && s.ref.state.context.y === 3
-      )
-      if (twoStepMove) {
-        moves.push(twoStepMove.ref)
-      }
-    }
-  } else {
-    const move = squares.find(
-      s =>
-        s.ref.state.context.x === context.x &&
-        s.ref.state.context.y === context.y - 1
-    )
-    if (move) {
-      moves.push(move.ref)
-    }
-    if (context.y === 6) {
-      const twoStepMove = squares.find(
-        s => s.ref.state.context.x === context.x && s.ref.state.context.y === 4
-      )
-      if (twoStepMove) {
-        moves.push(twoStepMove.ref)
-      }
-    }
-  }
-
-  return moves
-}
+const twoStepMove = (s: SquareType, context: SquareContext): boolean =>
+  context.y === (context.color === Color.black ? 1 : 6) &&
+  (!s.ref.state.context.piece &&
+    s.ref.state.context.x === context.x &&
+    s.ref.state.context.y === (context.color === Color.black ? 3 : 4))
