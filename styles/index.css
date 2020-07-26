@@ -35,7 +35,7 @@
 
 .move {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   top: 0;
   left: 0;
   width: 12.5%;
@@ -73,7 +73,7 @@
 }
 
 .highlighted {
-  @apply bg-blue-200;
+  @apply bg-blue-500;
 }
 
 .highlighted-enemy {
