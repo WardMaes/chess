@@ -5,8 +5,53 @@
 
 @tailwind utilities;
 
+#__next {
+  padding: 1em;
+}
+
+.piece {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 12.5%;
+  height: 12.5%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  transform: scale(0.66666);
+  transition: 1s;
+  cursor: pointer;
+  box-shadow: 0 0 5px #888, 0 0 10px #888, 0 0 20px #888;
+}
+.piece:hover {
+  transform: scale(.8);
+  transition: .2s;
+}
+
+.move {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 12.5%;
+  height: 12.5%;
+  background: blue;
+  transform: scale(0.95);
+  transition: .2s;
+  cursor: pointer;
+  opacity: .7;
+}
+.move:hover {
+  opacity: 1;
+}
+
 .square {
-  @apply relative h-full w-full  border-solid border-2 border-gray-600;
+  @apply relative h-full w-full;
   padding-top: 100%;
 }
 
@@ -19,7 +64,12 @@
 }
 
 .container {
+  position: relative;
   @apply max-w-2xl mx-auto my-0;
+}
+
+.kill {
+  @apply bg-red-800;
 }
 
 .highlighted {
