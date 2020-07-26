@@ -1,9 +1,10 @@
-import Board from '../components/Board'
+// import Board from '../components/Board'
+import { ChessGame } from '../components/PureBoard'
 
 const IndexPage = () => {
   return (
     <div>
-      <Board />
+      <ChessGame />
     </div>
   )
 }
