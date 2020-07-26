@@ -31,9 +31,16 @@ const initialState = defaultSquareConfig()
 
 export const ChessGame = () => {
   const [pieces, setPieces] = useState(initialState)
+  const [turn, setTurn] = useState(Color.white)
   const [selected, setSelected] = useState<PieceType | null>(null)
   const [moves, setMoves] = useState<MoveType[]>([])
 
+  const select = (position: PositionType) => {
+    const piece = pieces.find((p) => p.x === position.x && p.y === position.y)
+    if (piece && piece.color === turn) {
+      setSelected(piece)
+    }
+  }
   const move = (position: PositionType) => {
     if (selected && !(selected.x === position.x && selected.y === position.y)) {
       const killed = pieces.filter(
@@ -42,7 +49,8 @@ export const ChessGame = () => {
       selected.x = position.x
       selected.y = position.y
       setPieces(killed)
-      setSelected(selected)
+      setSelected(null)
+      setTurn(turn === Color.white ? Color.black : Color.white)
     }
   }
 
@@ -54,7 +62,7 @@ export const ChessGame = () => {
       pieces={pieces}
       moves={moves}
       onSquareClick={move}
-      onSquareEnter={setSelected}
+      onSquareEnter={select}
     />
   )
 }
@@ -77,7 +85,6 @@ export const PureBoard = ({
           <Piece
             key={piece.key}
             piece={piece}
-            onSquareClick={onSquareClick}
             onSquareEnter={onSquareEnter}
           />
         ))}
@@ -101,7 +108,7 @@ function Move({ move, onSquareClick }: MoveProps) {
   )
 }
 
-function Piece({ piece, onSquareClick, onSquareEnter }: PieceProps) {
+function Piece({ piece, onSquareEnter }: PieceProps) {
   // console.log('rerender piece', piece)
   return (
     <div
@@ -112,7 +119,6 @@ function Piece({ piece, onSquareClick, onSquareEnter }: PieceProps) {
         background: piece.color,
         color: piece.color === Color.black ? 'white' : 'black',
       }}
-      onClick={() => onSquareClick(piece)}
       onMouseEnter={() => onSquareEnter(piece)}
     >
       {piece.piece}
@@ -275,20 +281,19 @@ type PieceType = {
 }
 
 type Props = {
-  onSquareClick: (i) => void
-  onSquareEnter: (i) => void
+  onSquareClick: (position: PositionType) => void
+  onSquareEnter: (position: PositionType) => void
   pieces: PieceType[]
   moves: MoveType[]
 }
 
 type MoveProps = {
-  onSquareClick: (i) => void
-  // onSquareEnter: (i) => void
+  onSquareClick: (position: PositionType) => void
+  // onSquareEnter: (position: PositionType) => void
   move: MoveType
 }
 
 type PieceProps = {
-  onSquareClick: (i) => void
-  onSquareEnter: (i) => void
+  onSquareEnter: (position: PositionType) => void
   piece: PieceType
 }
